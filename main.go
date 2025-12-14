@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"os/signal"
@@ -33,32 +32,39 @@ func init() {
 		log.Fatal(err)
 	}
 
-	server = new(Server)
+	server = NewServer()
 }
 
 var (
-	cmd = &discordgo.ApplicationCommand{
-		Name:        "start",
-		Description: "Start a new game",
+	commands = []*discordgo.ApplicationCommand{
+		{
+			Name:        "start",
+			Description: "Start a new game",
+		},
+		{
+			Name:        "vote",
+			Description: "Start a voting session",
+		},
 	}
 )
 
 func main() {
-	session.AddHandler(func(s *discordgo.Session, i *discordgo.Ready) {
-		fmt.Println("Bot is ready!")
-		_, err := session.ApplicationCommandCreate(session.State.User.ID, GUILD_ID, cmd)
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println("Commands created!")
+	session.AddHandler(func(s *discordgo.Session, r *discordgo.Ready) {
+		log.Println("bot is running")
 	})
 
 	session.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-		if i.ApplicationCommandData().Name == "start" {
-			StartCmdHandler(s, i)
-			return
+		if h, ok := commandHandlers[i.ApplicationCommandData().Name]; ok {
+			h(s, i)
 		}
 	})
+
+	for _, cmd := range commands {
+		_, err := session.ApplicationCommandCreate("impostor-bot", GUILD_ID, cmd)
+		if err != nil {
+			log.Fatalf("cannot create slash command %q: %v", cmd.Name, err)
+		}
+	}
 
 	err := session.Open()
 	if err != nil {
