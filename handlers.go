@@ -180,23 +180,25 @@ func voteClickHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
 
 	mostVotedPlayerID := game.VotingSession.GetMostVoted()
 
-	game.EjectPlayer(mostVotedPlayerID)
+	ejectedPlayer := game.EjectPlayer(mostVotedPlayerID)
 
 	textChannelID := game.TextChannelID
 
 	if game.IsImpostor(mostVotedPlayerID) {
-		s.ChannelMessageSend(textChannelID, "IMPOSTOR Ejected! VICTORY! 🏆")
+		s.ChannelMessageSend(textChannelID, fmt.Sprintf("🏆 IMPOSTOR Ejected! VICTORY! 🏆 - Game %s has ended!", game.ID))
 		game.End()
 		return
 	}
 
 	if game.AlivePlayersCount() <= 2 {
-		s.ChannelMessageSend(textChannelID, "😈 IMPOSTOR VICTORY 🏆")
+		s.ChannelMessageSend(textChannelID, fmt.Sprintf("😈 IMPOSTOR VICTORY 🏆 - Game %s has ended!", game.ID))
 		game.End()
 		return
 	}
 
+	s.ChannelMessageSend(textChannelID, fmt.Sprintf("%s was ejected...💨", ejectedPlayer.Name))
 	s.ChannelMessageSend(textChannelID, "The game continues. There is 1 impostor among us...")
+	s.ChannelMessageSend(textChannelID, fmt.Sprintf("Players alive: %s", game.AlivePlayersToText()))
 }
 
 func getChannelIDByMember(guild *discordgo.Guild, member discordgo.Member) string {

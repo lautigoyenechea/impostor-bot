@@ -6,6 +6,7 @@ import (
 	"maps"
 	"math/rand"
 	"slices"
+	"strings"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -89,8 +90,18 @@ func (g *Game) AlivePlayersCount() int {
 	return len(g.Players)
 }
 
-func (g *Game) EjectPlayer(playerID string) {
+func (g *Game) AlivePlayersToText() string {
+	var builder strings.Builder
+	for _, p := range g.Players {
+		builder.WriteString(fmt.Sprintf("- %s\n", p.Name))
+	}
+	return builder.String()
+}
+
+func (g *Game) EjectPlayer(playerID string) Player {
+	player, _ := g.Players[playerID]
 	delete(g.Players, playerID)
+	return player
 }
 
 func (g *Game) sendMessageToPlayer(playerID, msg string) {
