@@ -20,14 +20,14 @@ type VoteMessage struct {
 	Rows []discordgo.MessageComponent
 }
 
-func NewVotingSession(game *Game) VotingSession {
+func NewVotingSession(game *Game, guildID string) VotingSession {
 	if game == nil {
 		log.Fatal("new voting session: game can not be nil")
 		return VotingSession{}
 	}
 
 	return VotingSession{
-		Message:  newVoteMessage(game),
+		Message:  newVoteMessage(game, guildID),
 		Votes:    make(map[string]string),
 		IsActive: true,
 	}
@@ -78,11 +78,11 @@ func (vs *VotingSession) Close() {
 	vs.IsActive = false
 }
 
-func newVoteMessage(game *Game) VoteMessage {
+func newVoteMessage(game *Game, guildID string) VoteMessage {
 	var buttoms []discordgo.MessageComponent
 
 	for _, player := range game.Players {
-		buttoms = append(buttoms, player.VoteButtom())
+		buttoms = append(buttoms, player.VoteButtom(guildID))
 	}
 
 	var rows []discordgo.MessageComponent

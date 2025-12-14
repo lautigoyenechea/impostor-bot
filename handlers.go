@@ -9,9 +9,8 @@ import (
 )
 
 var commandHandlers = map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
-	"start":       startCmdHandler,
-	"vote":        voteCmdHandler,
-	"vote-clicks": voteClickHandler,
+	"start": startCmdHandler,
+	"vote":  voteCmdHandler,
 }
 
 func startCmdHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
@@ -20,7 +19,7 @@ func startCmdHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		log.Fatalf("start cmd handler: getting guild: %v", err)
 	}
 
-	voiceChannelID := getChannelID(guild, i)
+	voiceChannelID := getChannelIDByMember(guild, *i.Member)
 
 	if voiceChannelID == "" {
 		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
@@ -58,7 +57,7 @@ func startCmdHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		return
 	}
 
-	game := NewGame(voiceChannelID, admin, players)
+	game := NewGame(voiceChannelID, i.ChannelID, admin, players)
 	server.AddGame(voiceChannelID, game)
 
 	s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
@@ -79,7 +78,7 @@ func voteCmdHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		log.Fatalf("vote cmd handler: getting guild: %v", err)
 	}
 
-	channelID := getChannelID(guild, i)
+	channelID := getChannelIDByMember(guild, *i.Member)
 	game := server.Game(channelID)
 	if game == nil {
 		log.Printf("vote cmd handler: game not found for channel id %s\n", channelID)
@@ -106,7 +105,7 @@ func voteCmdHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		return
 	}
 
-	game.SendVotesToPlayers()
+	game.SendVotesToPlayers(i.GuildID)
 
 	s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
@@ -117,23 +116,31 @@ func voteCmdHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
 }
 
 func voteClickHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	if i.Type != discordgo.InteractionMessageComponent {
+	customID := i.MessageComponentData().CustomID
+	if !strings.HasPrefix(customID, "vote:") {
 		return
 	}
 
-	if !strings.HasPrefix(i.MessageComponentData().CustomID, "vote:") {
+	parts := strings.Split(customID, ":")
+
+	if len(parts) != 3 {
+		log.Printf("vote click handler: malformed custom ID: %s", customID)
 		return
 	}
 
-	votedForID := strings.TrimPrefix(i.MessageComponentData().CustomID, "vote:")
-	voterID := i.Member.User.ID
+	targetGuildID := parts[1]
+	votedForID := parts[2]
+	voterID := i.User.ID
 
-	guild, err := session.State.Guild(i.GuildID)
+	guild, err := session.State.Guild(targetGuildID)
 	if err != nil {
-		log.Fatalf("vote click handler: getting guild: %v", err)
+		guild, err = s.Guild(targetGuildID)
+		if err != nil {
+			log.Fatalf("vote click handler: getting guild: %v", err)
+		}
 	}
 
-	channelID := getChannelID(guild, i)
+	channelID := getChannelIDByUser(guild, *i.User)
 	game := server.Game(channelID)
 	if game == nil {
 		log.Printf("vote click handler: game not found for channel id %s\n", channelID)
@@ -172,43 +179,38 @@ func voteClickHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	game.VotingSession.Close()
 
 	mostVotedPlayerID := game.VotingSession.GetMostVoted()
-	if game.IsImpostor(mostVotedPlayerID) {
-		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-			Type: discordgo.InteractionResponseChannelMessageWithSource,
-			Data: &discordgo.InteractionResponseData{
-				Content: "IMPOSTOR Ejected! VICTORY! 🏆",
-			},
-		})
-		game.End()
-		return
-	}
 
 	game.EjectPlayer(mostVotedPlayerID)
 
-	if game.AlivePlayersCount() == 2 {
-		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-			Type: discordgo.InteractionResponseChannelMessageWithSource,
-			Data: &discordgo.InteractionResponseData{
-				Content: "😈 IMPOSTOR VICTORY 🏆",
-			},
-		})
+	textChannelID := game.TextChannelID
+
+	if game.IsImpostor(mostVotedPlayerID) {
+		s.ChannelMessageSend(textChannelID, "IMPOSTOR Ejected! VICTORY! 🏆")
 		game.End()
 		return
 	}
 
-	s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-		Type: discordgo.InteractionResponseChannelMessageWithSource,
-		Data: &discordgo.InteractionResponseData{
-			Content: "The game continues. There is 1 impostor among us...",
-		},
-	})
+	if game.AlivePlayersCount() <= 2 {
+		s.ChannelMessageSend(textChannelID, "😈 IMPOSTOR VICTORY 🏆")
+		game.End()
+		return
+	}
 
-	game.VotingSession.Close()
+	s.ChannelMessageSend(textChannelID, "The game continues. There is 1 impostor among us...")
 }
 
-func getChannelID(guild *discordgo.Guild, i *discordgo.InteractionCreate) string {
+func getChannelIDByMember(guild *discordgo.Guild, member discordgo.Member) string {
 	for _, vs := range guild.VoiceStates {
-		if vs.UserID == i.Member.User.ID {
+		if vs.UserID == member.User.ID {
+			return vs.ChannelID
+		}
+	}
+	return ""
+}
+
+func getChannelIDByUser(guild *discordgo.Guild, user discordgo.User) string {
+	for _, vs := range guild.VoiceStates {
+		if vs.UserID == user.ID {
 			return vs.ChannelID
 		}
 	}

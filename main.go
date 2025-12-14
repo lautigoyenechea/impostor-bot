@@ -32,6 +32,8 @@ func init() {
 		log.Fatal(err)
 	}
 
+	session.Identify.Intents = discordgo.IntentsGuilds | discordgo.IntentsGuildMessages | discordgo.IntentsMessageContent
+
 	server = NewServer()
 }
 
@@ -54,23 +56,29 @@ func main() {
 	})
 
 	session.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-		if h, ok := commandHandlers[i.ApplicationCommandData().Name]; ok {
-			h(s, i)
+		switch i.Type {
+		case discordgo.InteractionApplicationCommand:
+			if h, ok := commandHandlers[i.ApplicationCommandData().Name]; ok {
+				h(s, i)
+			}
+
+		case discordgo.InteractionMessageComponent:
+			voteClickHandler(s, i)
 		}
 	})
-
-	for _, cmd := range commands {
-		_, err := session.ApplicationCommandCreate("impostor-bot", GUILD_ID, cmd)
-		if err != nil {
-			log.Fatalf("cannot create slash command %q: %v", cmd.Name, err)
-		}
-	}
 
 	err := session.Open()
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer session.Close()
+
+	for _, cmd := range commands {
+		_, err := session.ApplicationCommandCreate(session.State.User.ID, "", cmd)
+		if err != nil {
+			log.Fatalf("cannot create slash command %q: %v", cmd.Name, err)
+		}
+	}
 
 	log.Println("Impostor Bot is online!")
 

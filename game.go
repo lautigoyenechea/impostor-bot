@@ -34,9 +34,11 @@ type Game struct {
 	VotingSession *VotingSession
 
 	Ended bool
+
+	TextChannelID string
 }
 
-func NewGame(voiceChannelID string, admin Player, players map[string]Player) *Game {
+func NewGame(voiceChannelID, textChannelID string, admin Player, players map[string]Player) *Game {
 	return &Game{
 		ID:             "#1",
 		VoiceChannelID: voiceChannelID,
@@ -44,6 +46,7 @@ func NewGame(voiceChannelID string, admin Player, players map[string]Player) *Ga
 		Players:        players,
 		ImpostorID:     pickImpostor(players),
 		Word:           pickWord(),
+		TextChannelID:  textChannelID,
 	}
 }
 
@@ -69,8 +72,8 @@ func (g *Game) SendWordToPlayers() {
 	}
 }
 
-func (g *Game) SendVotesToPlayers() {
-	votingSession := NewVotingSession(g)
+func (g *Game) SendVotesToPlayers(guildID string) {
+	votingSession := NewVotingSession(g, guildID)
 
 	for id := range g.Players {
 		g.sendComplexMessageToPlayer(id, &discordgo.MessageSend{
@@ -112,7 +115,7 @@ func (g *Game) sendComplexMessageToPlayer(playerID string, msg *discordgo.Messag
 
 func pickImpostor(players map[string]Player) string {
 	playersIDs := slices.Collect(maps.Keys(players))
-	return playersIDs[rand.Intn(len(words))]
+	return playersIDs[rand.Intn(len(playersIDs))]
 }
 
 func pickWord() string {
