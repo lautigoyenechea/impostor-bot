@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/google/uuid"
 )
 
 var words = []string{
@@ -40,8 +41,11 @@ type Game struct {
 }
 
 func NewGame(voiceChannelID, textChannelID string, admin Player, players map[string]Player) *Game {
+	fullGameID := uuid.NewString()
+	shortGameID := strings.Split(fullGameID, "-")[0]
+
 	return &Game{
-		ID:             "#1",
+		ID:             shortGameID,
 		VoiceChannelID: voiceChannelID,
 		Admin:          admin,
 		Players:        players,
