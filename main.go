@@ -57,7 +57,7 @@ var (
 
 func main() {
 	session.AddHandler(func(s *discordgo.Session, r *discordgo.Ready) {
-		log.Println("bot is running")
+		log.Println("Bot is ready")
 	})
 
 	session.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {

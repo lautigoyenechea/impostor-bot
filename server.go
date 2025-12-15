@@ -1,6 +1,14 @@
 package main
 
-import "sync"
+import (
+	"errors"
+	"sync"
+)
+
+var (
+	ErrRunningGame = errors.New("there is a running game")
+	ErrGameNull    = errors.New("game is null")
+)
 
 type Server struct {
 	Games map[string]*Game
@@ -14,19 +22,22 @@ func NewServer() *Server {
 	}
 }
 
-func (s *Server) AddGame(k string, g *Game) {
+func (s *Server) AddGame(k string, g *Game) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
 	if g == nil {
-		return
+		return ErrGameNull
 	}
 
-	if _, ok := s.Games[k]; ok {
-		return
+	if existingGame, ok := s.Games[k]; ok {
+		if !existingGame.Ended {
+			return ErrRunningGame
+		}
 	}
 
 	s.Games[k] = g
+	return nil
 }
 
 func (s *Server) Game(k string) *Game {

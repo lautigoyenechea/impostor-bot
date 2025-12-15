@@ -19,7 +19,7 @@ type Game struct {
 	VoiceChannelID string
 	Admin          Player
 	Players        map[string]Player
-	ImpostorID     string
+	Impostor       Player
 	ImpostorWord   ImpostorWord
 	VotingSession  *VotingSession
 	Ended          bool
@@ -35,7 +35,7 @@ func NewGame(voiceChannelID, textChannelID string, admin Player, players map[str
 		VoiceChannelID: voiceChannelID,
 		Admin:          admin,
 		Players:        players,
-		ImpostorID:     pickImpostor(players),
+		Impostor:       pickImpostor(players),
 		ImpostorWord:   pickWord(),
 		TextChannelID:  textChannelID,
 	}
@@ -46,7 +46,7 @@ func (g *Game) IsAdmin(playerID string) bool {
 }
 
 func (g *Game) IsImpostor(playerID string) bool {
-	return g.ImpostorID == playerID
+	return g.Impostor.ID == playerID
 }
 
 func (g *Game) End() {
@@ -115,9 +115,10 @@ func (g *Game) sendComplexMessageToPlayer(playerID string, msg *discordgo.Messag
 	session.ChannelMessageSendComplex(dmChannel.ID, msg)
 }
 
-func pickImpostor(players map[string]Player) string {
+func pickImpostor(players map[string]Player) Player {
 	playersIDs := slices.Collect(maps.Keys(players))
-	return playersIDs[rand.Intn(len(playersIDs))]
+	impostorID := playersIDs[rand.Intn(len(playersIDs))]
+	return players[impostorID]
 }
 
 func pickWord() ImpostorWord {

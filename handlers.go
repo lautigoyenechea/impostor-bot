@@ -58,7 +58,17 @@ func startCmdHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	}
 
 	game := NewGame(voiceChannelID, i.ChannelID, admin, players)
-	server.AddGame(voiceChannelID, game)
+	err = server.AddGame(voiceChannelID, game)
+
+	if err != nil && err == ErrRunningGame {
+		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseChannelMessageWithSource,
+			Data: &discordgo.InteractionResponseData{
+				Content: "❌ There is an existing game running!",
+			},
+		})
+		return
+	}
 
 	s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
@@ -105,14 +115,14 @@ func voteCmdHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		return
 	}
 
-	game.SendVotesToPlayers(i.GuildID)
-
 	s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
 		Data: &discordgo.InteractionResponseData{
 			Content: "⏳ Waiting for all players to vote...",
 		},
 	})
+
+	game.SendVotesToPlayers(i.GuildID)
 }
 
 func voteClickHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
@@ -185,13 +195,13 @@ func voteClickHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	textChannelID := game.TextChannelID
 
 	if game.IsImpostor(mostVotedPlayerID) {
-		s.ChannelMessageSend(textChannelID, fmt.Sprintf("🏆 IMPOSTOR Ejected! VICTORY! 🏆 - Game %s has ended!", game.ID))
+		s.ChannelMessageSend(textChannelID, fmt.Sprintf("🏆 IMPOSTOR %s Ejected! VICTORY! 🏆 \n The word was: %s \n Game %s has ended!", ejectedPlayer.Name, game.ImpostorWord.Word, game.ID))
 		game.End()
 		return
 	}
 
 	if game.AlivePlayersCount() <= 2 {
-		s.ChannelMessageSend(textChannelID, fmt.Sprintf("😈 IMPOSTOR VICTORY 🏆 - Game %s has ended!", game.ID))
+		s.ChannelMessageSend(textChannelID, fmt.Sprintf("😈 IMPOSTOR VICTORY, %s win 🏆 \n The word was: %s \nGame %s has ended!", game.Impostor.Name, game.ImpostorWord.Word, game.ID))
 		game.End()
 		return
 	}

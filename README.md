@@ -70,7 +70,7 @@ go run .
 
 You should see:
 ```
-bot is running
+Bot is ready
 Impostor Bot is online!
 ```
 
@@ -99,6 +99,11 @@ Impostor Bot is online!
 ## 🤝 Contributing
 
 Feel free to open issues or submit pull requests!
+
+## TODO:
+- Support multiple impostors by an option on the /start command.
+- Support draws in voting sessions.
+
 
 ## 📄 License
 
