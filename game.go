@@ -12,35 +12,25 @@ import (
 	"github.com/google/uuid"
 )
 
-var words = []string{
-	"Mate",
-	"Notebook",
-	"Mesa",
-	"Silla",
-	"Arbol",
-	"Oso",
-	"Tigre",
-	"Calle",
-	"Moto",
-}
+var words []ImpostorWord
 
 type Game struct {
 	ID             string
 	VoiceChannelID string
 	Admin          Player
 	Players        map[string]Player
-
-	ImpostorID string
-	Word       string
-
-	VotingSession *VotingSession
-
-	Ended bool
-
-	TextChannelID string
+	ImpostorID     string
+	Word           ImpostorWord
+	VotingSession  *VotingSession
+	Ended          bool
+	TextChannelID  string
 }
 
 func NewGame(voiceChannelID, textChannelID string, admin Player, players map[string]Player) *Game {
+	if len(words) == 0 {
+		LoadImpostorWords("./words_spanish.csv")
+	}
+
 	fullGameID := uuid.NewString()
 	shortGameID := strings.Split(fullGameID, "-")[0]
 
@@ -70,7 +60,7 @@ func (g *Game) End() {
 func (g *Game) SendWordToPlayers() {
 	for id := range g.Players {
 		if g.IsImpostor(id) {
-			g.sendMessageToPlayer(id, fmt.Sprintf("Game %s - 🔪 You are the IMPOSTOR!", g.ID))
+			g.sendMessageToPlayer(id, fmt.Sprintf("Game %s - 🔪 You are the IMPOSTOR!\nHint: %s", g.ID, g.Word.Hint))
 			continue
 		}
 		g.sendMessageToPlayer(id, fmt.Sprintf("Game %s - The word is: %s", g.ID, g.Word))
@@ -96,6 +86,7 @@ func (g *Game) AlivePlayersCount() int {
 
 func (g *Game) AlivePlayersToText() string {
 	var builder strings.Builder
+	builder.WriteString("\n")
 	for _, p := range g.Players {
 		builder.WriteString(fmt.Sprintf("- %s\n", p.Name))
 	}
@@ -133,6 +124,6 @@ func pickImpostor(players map[string]Player) string {
 	return playersIDs[rand.Intn(len(playersIDs))]
 }
 
-func pickWord() string {
+func pickWord() ImpostorWord {
 	return words[rand.Intn(len(words))]
 }

@@ -1,0 +1,155 @@
+word,concept,hint
+pelota,deportes,Objeto central que conecta reglas y movimiento
+arco,deportes,Estructura fija con función decisiva
+cancha,deportes,Espacio delimitado con normas implícitas
+árbitro,deportes,Figura neutral que impone decisiones
+silbato,deportes,Señal sonora que marca cambios
+equipo,deportes,Conjunto coordinado con objetivo común
+entrenador,deportes,Guía externo que ajusta comportamientos
+camiseta,deportes,Identidad visual compartida
+tiempo,deportes,Variable limitada que condiciona resultados
+gol,deportes,Evento breve de alto impacto
+falta,deportes,Acción mínima con consecuencia reglada
+público,deportes,Observadores que influyen emocionalmente
+red,deportes,Estructura flexible con propósito final
+banco,deportes,Lugar pasivo que puede volverse activo
+capitán,deportes,Referencia interna reconocida
+marcador,deportes,Representación numérica del progreso
+lesión,deportes,Interrupción física no planeada
+penal,deportes,Oportunidad directa con presión
+saque,deportes,Reinicio controlado del sistema
+torneo,deportes,Secuencia organizada de enfrentamientos
+liga,deportes,Estructura repetitiva de competencia
+estadio,deportes,Contenedor masivo de actividad
+regla,deportes,Marco invisible que ordena acciones
+victoria,deportes,Resultado esperado pero no garantizado
+derrota,deportes,Resultado negativo con aprendizaje implícito
+empate,deportes,Equilibrio que deja tensión
+calentamiento,deportes,Preparación previa al esfuerzo
+suplente,deportes,Recurso latente disponible
+táctica,deportes,Decisión estratégica anticipada
+ritmo,deportes,Velocidad colectiva percibida
+
+llave,objetos cotidianos,Pequeño objeto que habilita accesos
+vaso,objetos cotidianos,Recipiente frágil de uso repetido
+mesa,objetos cotidianos,Superficie estable para interacción
+silla,objetos cotidianos,Soporte pasivo para descanso
+celular,objetos cotidianos,Interfaz constante con el exterior
+reloj,objetos cotidianos,Referencia continua del tiempo
+puerta,objetos cotidianos,Límite físico entre espacios
+cargador,objetos cotidianos,Elemento auxiliar dependiente
+lámpara,objetos cotidianos,Fuente artificial de visibilidad
+espejo,objetos cotidianos,Reflejo que devuelve información
+cuaderno,objetos cotidianos,Soporte físico de ideas
+lapicera,objetos cotidianos,Herramienta simple de registro
+mochila,objetos cotidianos,Contenedor portátil personal
+control remoto,objetos cotidianos,Intermediario sin movimiento propio
+heladera,objetos cotidianos,Almacenamiento frío organizado
+microondas,objetos cotidianos,Transformación rápida controlada
+cortina,objetos cotidianos,Barrera flexible de luz
+cepillo,objetos cotidianos,Instrumento repetitivo de higiene
+jabón,objetos cotidianos,Agente limpiador transitorio
+toalla,objetos cotidianos,Elemento absorbente reutilizable
+basura,objetos cotidianos,Resultado final del consumo
+bolsa,objetos cotidianos,Contenedor flexible temporal
+llavero,objetos cotidianos,Agrupador pequeño de importancia
+alfombra,objetos cotidianos,Superficie decorativa funcional
+ventana,objetos cotidianos,Apertura visual al exterior
+enchufe,objetos cotidianos,Punto fijo de energía
+interruptor,objetos cotidianos,Control binario inmediato
+cuchara,objetos cotidianos,Herramienta curva de transferencia
+plato,objetos cotidianos,Base estable para consumo
+taza,objetos cotidianos,Recipiente asociado a rutinas
+
+perro,animales,Compañero doméstico de conducta social
+gato,animales,Independencia con cercanía selectiva
+caballo,animales,Fuerza controlada en movimiento
+vaca,animales,Producción constante asociada al campo
+oveja,animales,Comportamiento grupal predecible
+león,animales,Autoridad natural reconocida
+tigre,animales,Poder solitario y sigiloso
+elefante,animales,Memoria y presencia dominante
+mono,animales,Imitación activa y curiosidad
+jirafa,animales,Perspectiva elevada distintiva
+cebra,animales,Patrón visual de confusión
+oso,animales,Fuerza variable según contexto
+lobo,animales,Organización jerárquica cooperativa
+zorro,animales,Estrategia basada en astucia
+conejo,animales,Velocidad asociada a huida
+águila,animales,Observación desde altura extrema
+búho,animales,Actividad nocturna y percepción
+serpiente,animales,Movimiento continuo sin extremidades
+tortuga,animales,Progreso lento con protección
+pez,animales,Existencia ligada a otro medio
+delfín,animales,Comunicación compleja y juego
+tiburón,animales,Depredador eficiente sin pausa
+rana,animales,Transición entre entornos
+canguro,animales,Desplazamiento basado en saltos
+camello,animales,Resistencia en condiciones extremas
+pingüino,animales,Adaptación contradictoria al entorno
+koala,animales,Actividad mínima prolongada
+murciélago,animales,Orientación sin visión directa
+abeja,animales,Trabajo colectivo estructurado
+hormiga,animales,Esfuerzo individual acumulativo
+
+director,películas,Responsable de decisiones finales
+actor,películas,Intérprete visible del relato
+guion,películas,Estructura previa a la ejecución
+escena,películas,Unidad narrativa delimitada
+plano,películas,Perspectiva visual intencional
+montaje,películas,Orden que construye sentido
+banda sonora,películas,Clima emocional auditivo
+protagonista,películas,Eje central del conflicto
+antagonista,películas,Fuerza opuesta al objetivo
+diálogo,películas,Intercambio verbal revelador
+clímax,películas,Punto máximo de tensión
+trailer,películas,Resumen persuasivo anticipado
+créditos,películas,Cierre formal del proceso
+rodaje,películas,Fase activa de producción
+guionista,películas,Autor de la estructura narrativa
+productor,películas,Gestión de recursos y decisiones
+cine,películas,Espacio colectivo de visualización
+pantalla,películas,Superficie donde ocurre todo
+premio,películas,Reconocimiento externo simbólico
+género,películas,Clasificación por patrones comunes
+secuela,películas,Continuación de una historia previa
+saga,películas,Relato extendido en partes
+escenografía,películas,Contexto físico construido
+vestuario,películas,Identidad visual de personajes
+fotografía,películas,Tratamiento técnico de la imagen
+iluminación,películas,Control visual de atmósfera
+doblaje,películas,Adaptación vocal posterior
+subtítulos,películas,Traducción escrita sincronizada
+ficción,películas,Relato no literal
+documental,películas,Representación de hechos reales
+
+pizza,comida,Preparación compartida de base circular
+asado,comida,Ritual social de cocción lenta
+empanada,comida,Contenido cerrado en masa
+hamburguesa,comida,Estructura apilada portátil
+milanesa,comida,Cobertura crujiente tradicional
+fideos,comida,Base neutra adaptable
+arroz,comida,Acompañamiento versátil cotidiano
+ensalada,comida,Composición fresca variable
+pan,comida,Elemento básico universal
+queso,comida,Derivado sólido con variaciones
+sopa,comida,Preparación líquida caliente
+tarta,comida,Base horneada con relleno
+pollo,comida,Proteína común adaptable
+pescado,comida,Ingrediente sensible a la cocción
+carne,comida,Centro de múltiples platos
+verduras,comida,Grupo diverso complementario
+fruta,comida,Opción dulce natural
+postre,comida,Cierre esperado de comida
+helado,comida,Preparación fría cremosa
+chocolate,comida,Sabor intenso asociado al placer
+torta,comida,Preparación dulce celebratoria
+galletitas,comida,Snack seco repetido
+sándwich,comida,Comida armada portátil
+mayonesa,comida,Condimento emulsionado suave
+aceite,comida,Medio de cocción esencial
+sal,comida,Potenciador mínimo imprescindible
+azúcar,comida,Dulzor base elemental
+vinagre,comida,Acidez correctora sutil
+café,comida,Bebida estimulante oscura
+té,comida,Infusión suave ritual
