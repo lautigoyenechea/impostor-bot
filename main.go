@@ -35,6 +35,11 @@ func init() {
 	session.Identify.Intents = discordgo.IntentsGuilds | discordgo.IntentsGuildMessages | discordgo.IntentsMessageContent
 
 	server = NewServer()
+
+	words, err = LoadImpostorWords("./words_spanish.csv")
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 var (

@@ -20,17 +20,13 @@ type Game struct {
 	Admin          Player
 	Players        map[string]Player
 	ImpostorID     string
-	Word           ImpostorWord
+	ImpostorWord   ImpostorWord
 	VotingSession  *VotingSession
 	Ended          bool
 	TextChannelID  string
 }
 
 func NewGame(voiceChannelID, textChannelID string, admin Player, players map[string]Player) *Game {
-	if len(words) == 0 {
-		LoadImpostorWords("./words_spanish.csv")
-	}
-
 	fullGameID := uuid.NewString()
 	shortGameID := strings.Split(fullGameID, "-")[0]
 
@@ -40,7 +36,7 @@ func NewGame(voiceChannelID, textChannelID string, admin Player, players map[str
 		Admin:          admin,
 		Players:        players,
 		ImpostorID:     pickImpostor(players),
-		Word:           pickWord(),
+		ImpostorWord:   pickWord(),
 		TextChannelID:  textChannelID,
 	}
 }
@@ -60,10 +56,10 @@ func (g *Game) End() {
 func (g *Game) SendWordToPlayers() {
 	for id := range g.Players {
 		if g.IsImpostor(id) {
-			g.sendMessageToPlayer(id, fmt.Sprintf("Game %s - 🔪 You are the IMPOSTOR!\nHint: %s", g.ID, g.Word.Hint))
+			g.sendMessageToPlayer(id, fmt.Sprintf("Game %s - 🔪 You are the IMPOSTOR!\nHint: %s", g.ID, g.ImpostorWord.Hint))
 			continue
 		}
-		g.sendMessageToPlayer(id, fmt.Sprintf("Game %s - The word is: %s", g.ID, g.Word))
+		g.sendMessageToPlayer(id, fmt.Sprintf("Game %s - The word is: %s", g.ID, g.ImpostorWord.Word))
 	}
 }
 

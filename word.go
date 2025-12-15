@@ -28,7 +28,6 @@ func LoadImpostorWords(path string) ([]ImpostorWord, error) {
 
 	var words []ImpostorWord
 
-	// Skip header
 	for i := 1; i < len(records); i++ {
 		record := records[i]
 
