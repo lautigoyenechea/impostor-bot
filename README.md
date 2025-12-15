@@ -74,23 +74,6 @@ Bot is ready
 Impostor Bot is online!
 ```
 
-## 📁 Project Structure
-
-- `main.go` - Bot initialization and command registration
-- `game.go` - Core game logic and player management
-- `server.go` - Server/session management for multiple games
-- `handlers.go` - Discord command handlers
-- `vote.go` - Voting system implementation
-- `word.go` - Word loading and management
-- `player.go` - Player data structures
-- `words_spanish.csv` - Word database (Spanish)
-
-## 🛠️ Technologies Used
-
-- [discordgo](https://github.com/bwmarrin/discordgo) - Discord API wrapper for Go
-- [godotenv](https://github.com/joho/godotenv) - Environment variable management
-- [uuid](https://github.com/google/uuid) - Unique game ID generation
-
 ## 📝 Commands
 
 - `/start` - Start a new game (must be in a voice channel)
